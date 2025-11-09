@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Villa vista</title>
+    </head>
+    <body>
+        <h3>Edit listing</h3>
+        <form method="POST" action="/listings/<%=listing._id%>?_method=PUT">
+            <input name="listing[title]" value="<%=listing.title%>" type="text">
+            <br><br>
+            <textarea name="listing[description]"><%=listing.description%></textarea>
+            <br><br>
+            <input type="text" value="<%=listing.image%>" name="listing[image]">
+            <br><br>
+            <input type="text" value="<%=listing.price%>" name="listing[price]">
+            <br><br>
+            <input type="text" value="<%=listing.location%>" name="listing[location]">
+            <br><br>
+            <input type="text" value="<%=listing.country%>" name="listing[country]">
+            <br><br>
+            <button>Submit</button>
+        </form>
+    </body>
+</html>
