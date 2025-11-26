@@ -4,6 +4,8 @@ const wrapAsync = require("../utils/wrapAsync.js");
 const ExpressError = require("../utils/ExpresError.js");
 const { listingSchema, reviewSchema } = require("../schema.js");
 const Listing = require("../models/listing.js");
+const { isLoggedIn } = require("../middleware.js");
+
 
 
 /* "listing Schema Validation" */
@@ -24,7 +26,7 @@ router.get("/", wrapAsync(async (req, res) => {
 }));
 
 //new route
-router.get("/new", (req, res) => {
+router.get("/new", isLoggedIn, (req, res) => {
   res.render("listings/new.ejs");
 });
 
@@ -32,6 +34,10 @@ router.get("/new", (req, res) => {
 router.get("/:id", wrapAsync(async (req, res) => {
   let { id } = req.params;
   const listing = await Listing.findById(id).populate("reviews");
+  if(!listing) {
+    req.flash("error", "Listing you requested for does not exist");
+    res.redirect("/listings");
+  }
   res.render("listings/show.ejs", { listing });
 }));
 
@@ -39,11 +45,12 @@ router.get("/:id", wrapAsync(async (req, res) => {
 router.post("/",validateListing, wrapAsync(async (req, res) => {
   const newListing = new Listing(req.body.listing);
   await newListing.save();
+  req.flash("success", "New listing created !");
   res.redirect("/listings");
 }));
 
 //Edit route
-router.get("/:id/edit", wrapAsync(async (req, res) => {
+router.get("/:id/edit", isLoggedIn, wrapAsync(async (req, res) => {
   let { id } = req.params;
   const listing = await Listing.findById(id);
   res.render("listings/edit.ejs", { listing })
@@ -52,13 +59,15 @@ router.get("/:id/edit", wrapAsync(async (req, res) => {
 router.put("/:id", wrapAsync(async(req, res) => {
   let { id } = req.params;
   await Listing.findByIdAndUpdate(id, {...req.body.listing})
+  req.flash("success", "listing updated !");
   res.redirect(`/listings/${id}`); 
 }));
 
 /* delete route */
-router.delete("/:id", wrapAsync(async (req, res) => {
+router.delete("/:id", isLoggedIn, wrapAsync(async (req, res) => {
   let { id } = req.params;
   await Listing.findByIdAndDelete(id);
+  req.flash("success", "listing deleted !");
   res.redirect("/listings");
 }));
 
