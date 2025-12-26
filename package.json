@@ -1,4 +1,7 @@
 {
+  "engins": {
+    "node": "v22.19.0"
+  },
   "name": "villa-vista",
   "version": "1.0.0",
   "description": "",
@@ -12,6 +15,7 @@
   "dependencies": {
     "cloudinary": "^2.8.0",
     "connect-flash": "^0.1.1",
+    "connect-mongo": "^6.0.0",
     "dotenv": "^17.2.3",
     "ejs": "^3.1.10",
     "ejs-mate": "^4.0.0",
